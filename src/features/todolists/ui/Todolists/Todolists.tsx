@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/common/hooks"
-import { fetchTodolistsTC, selectTodolists } from "@/features/todolists/model/todolists-slice"
+import { fetchTodolists, selectTodolists } from "@/features/todolists/model/todolists-slice"
 import Grid from "@mui/material/Grid2"
 import Paper from "@mui/material/Paper"
 import { useEffect } from "react"
@@ -11,7 +11,7 @@ export const Todolists = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(fetchTodolistsTC())
+    dispatch(fetchTodolists())
   }, [])
 
   return (

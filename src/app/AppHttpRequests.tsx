@@ -9,7 +9,7 @@ import { type ChangeEvent, type CSSProperties, useEffect, useState } from "react
 
 export const AppHttpRequests = () => {
   const [todolists, setTodolists] = useState<Todolist[]>([])
-  const [tasks, setTasks] = useState<Record<string, DomainDomainTask>>({})
+  const [tasks, setTasks] = useState<Record<string, DomainTask[]>>({})
 
   useEffect(() => {
     todolistsApi.getTodolists().then((res) => {

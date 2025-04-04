@@ -2,6 +2,7 @@ import { createTodolistTC, deleteTodolistTC } from "./todolists-slice"
 import { createAppSlice } from "@/common/utils"
 import { tasksApi } from "@/features/todolists/api/tasksApi.ts"
 import { CreateTaskArgs, DeleteTaskArgs, DomainTask, UpdateTaskModel } from "@/features/todolists/api/tasksApi.types.ts"
+import { setStatus } from "@/app/app-slice.ts"
 
 export const tasksSlice = createAppSlice({
   name: "tasks",
@@ -21,12 +22,6 @@ export const tasksSlice = createAppSlice({
   reducers: (create) => ({
     //actions
 
-    // changeTaskStatusAC: create.reducer<{ todolistId: string; taskId: string; isDone: boolean }>((state, action) => {
-    //   const task = state[action.payload.todolistId].find((task) => task.id === action.payload.taskId)
-    //   if (task) {
-    //     task.status = action.payload.isDone ? TaskStatus.Completed : TaskStatus.New
-    //   }
-    // }),
     changeTaskTitleAC: create.reducer<{ todolistId: string; taskId: string; title: string }>((state, action) => {
       const task = state[action.payload.todolistId].find((task) => task.id === action.payload.taskId)
       if (task) {
@@ -46,11 +41,17 @@ export const tasksSlice = createAppSlice({
         state[action.payload.todolistId] = action.payload.tasks
       }
     }),
-    createTask: create.asyncThunk(async (args: CreateTaskArgs, { rejectWithValue }) => {
+    createTask: create.asyncThunk(async (args: CreateTaskArgs, { dispatch, rejectWithValue }) => {
       try {
+        dispatch(setStatus({status: 'loading'}))
+        //искусственная задержка 2 секунды
+        await new Promise(resolve => setTimeout(resolve, 2000))
+
         const res = await tasksApi.createTask(args)
+        dispatch(setStatus({status: 'succeeded'}))
         return { task: res.data.data.item }
       } catch (error) {
+        dispatch(setStatus({status: 'failed'}))
         return rejectWithValue(null)
       }
     }, {

@@ -39,6 +39,9 @@ export const todolistsSlice = createAppSlice({
     //async actions (thunk)
     fetchTodolists: create.asyncThunk(async (_arg, thunkAPI) => {
       try {
+        //искусственная задержка 2 секунды
+        await new Promise(resolve => setTimeout(resolve, 2000))
+
         const res = await todolistsApi.getTodolists()
         return { todolists: res.data }
       } catch (error) {

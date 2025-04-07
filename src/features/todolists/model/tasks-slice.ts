@@ -29,12 +29,18 @@ export const tasksSlice = createAppSlice({
       }
     }),
     //thunk
-    fetchTasks: create.asyncThunk(async (todolistId: string, { rejectWithValue }) => {
+    fetchTasks: create.asyncThunk(async (todolistId: string, {dispatch, rejectWithValue }) => {
       try {
+        dispatch(setStatus({status: 'loading'}))
+        //искусственная задержка 2 секунды
+        await new Promise(resolve => setTimeout(resolve, 2000))
+
         const res = await tasksApi.getTasks(todolistId)
         return { tasks: res.data.items, todolistId }
       } catch (error) {
         return rejectWithValue(null)
+      } finally {
+        dispatch(setStatus({status: 'idle'}))
       }
     }, {
       fulfilled: (state, action) => {
@@ -48,11 +54,13 @@ export const tasksSlice = createAppSlice({
         await new Promise(resolve => setTimeout(resolve, 2000))
 
         const res = await tasksApi.createTask(args)
-        dispatch(setStatus({status: 'succeeded'}))
+        // dispatch(setStatus({status: 'succeeded'}))
         return { task: res.data.data.item }
       } catch (error) {
-        dispatch(setStatus({status: 'failed'}))
+        // dispatch(setStatus({status: 'failed'}))
         return rejectWithValue(null)
+      } finally {
+        dispatch(setStatus({status: 'idle'}))
       }
     }, {
       fulfilled: (state, action) => {
@@ -115,8 +123,12 @@ export const tasksSlice = createAppSlice({
     // })
 
     //2 ариант
-    changeTaskStatus: create.asyncThunk(async (task: DomainTask, { rejectWithValue }) => {
+    changeTaskStatus: create.asyncThunk(async (task: DomainTask, { dispatch, rejectWithValue }) => {
       try {
+        dispatch(setStatus({status: 'loading'}))
+        //искусственная задержка 2 секунды
+        await new Promise(resolve => setTimeout(resolve, 2000))
+
         const model: UpdateTaskModel = {
           status: task.status,
           title: task.title,
@@ -129,6 +141,8 @@ export const tasksSlice = createAppSlice({
         return task
       } catch (error) {
         return rejectWithValue(null)
+      } finally {
+        dispatch(setStatus({status: 'idle'}))
       }
     }, {
       fulfilled: (state, action) => {

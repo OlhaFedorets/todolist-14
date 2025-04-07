@@ -16,7 +16,7 @@ export type DomainTask = {
 export type GetTasksResponse = {
   error: string | null
   totalCount: number
-  items: DomainTask
+  items: DomainTask[]
 }
 
 export type UpdateTaskModel = {
